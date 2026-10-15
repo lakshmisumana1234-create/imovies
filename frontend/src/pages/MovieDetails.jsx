@@ -8,7 +8,7 @@ export default function MovieDetails({ show, onBack, onProceedToSeats }) {
   const formats = ['2D', '3D', '4DX', 'IMAX 2D'];
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/shows')
+    axios.get('https://imovies-backend-9iio.onrender.com/api/shows')
       .then((res) => {
         if (res.data && res.data.shows) {
           const movieShows = res.data.shows.filter(s => s.title.toLowerCase() === show.title.toLowerCase());

@@ -2,7 +2,7 @@ import axios from 'axios';
 import { io } from 'socket.io-client';
 
 export const api = axios.create({
-  baseURL: 'http://localhost:5000/api',
+  baseURL: 'https://imovies-backend-9iio.onrender.com/api',
 });
 
 // Attach JWT token automatically if available
