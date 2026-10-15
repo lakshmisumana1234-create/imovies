@@ -10,7 +10,7 @@ export default function TheaterDashboard() {
 
   const fetchShows = async () => {
     try {
-      const res = await fetch('https://imovies-backend-cthn.onrender.com/api/shows');
+      const res = await fetch('https://imovies-backend-91io.onrender.com/api/shows');
       const data = await res.json();
       if (data.success) setShows(data.shows);
     } catch (err) {
@@ -21,7 +21,7 @@ export default function TheaterDashboard() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch('https://imovies-backend-cthn.onrender.com/api/shows', {
+      const res = await fetch('https://imovies-backend-91io.onrender.com/api/shows', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form)

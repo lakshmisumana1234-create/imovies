@@ -6,7 +6,7 @@ export default function ShowList({ onSelectShow }) {
   const [search, setSearch] = useState('');
 
   useEffect(() => {
-    axios.get('https://imovies-backend-cthn.onrender.com/api/shows')
+    axios.get('https://imovies-backend-91io.onrender.com/api/shows')
       .then((res) => { 
         if (res.data && res.data.shows) {
           setShows(res.data.shows);

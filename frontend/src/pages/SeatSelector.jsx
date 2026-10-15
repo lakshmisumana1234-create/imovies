@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { io } from 'socket.io-client';
 import axios from 'axios';
 
-const socket = io('https://imovies-backend-cthn.onrender.com', {
+const socket = io('https://imovies-backend-91io.onrender.com', {
   autoConnect: false,
 } );
 
@@ -55,14 +55,14 @@ export default function SeatSelector({ show, user, onBack }) {
     setLoading(true);
 
     try {
-      const orderRes = await axios.post('https://imovies-backend-cthn.onrender.com/api/payment/create-order', {
+      const orderRes = await axios.post('https://imovies-backend-91io.onrender.com/api/payment/create-order', {
         amount: totalAmount,
       });
 
       const { order_id, amount, currency, isMock } = orderRes.data;
 
       if (isMock) {
-        await axios.post('https://imovies-backend-cthn.onrender.com/api/payment/verify-payment', {
+        await axios.post('https://imovies-backend-91io.onrender.com/api/payment/verify-payment', {
           razorpay_order_id: order_id,
           razorpay_payment_id: `pay_mock_${Date.now()}`,
           razorpay_signature: 'mock_signature',
@@ -89,7 +89,7 @@ export default function SeatSelector({ show, user, onBack }) {
         order_id: order_id,
         handler: async function (response) {
           try {
-            await axios.post('https://imovies-backend-cthn.onrender.com/api/payment/verify-payment', {
+            await axios.post('https://imovies-backend-91io.onrender.com/api/payment/verify-payment', {
               razorpay_order_id: response.razorpay_order_id,
               razorpay_payment_id: response.razorpay_payment_id,
               razorpay_signature: response.razorpay_signature,
