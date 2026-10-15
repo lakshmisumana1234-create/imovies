@@ -14,7 +14,7 @@ export default function Home({ onSelectMovie, onLoginSuccess }) {
   const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
-    axios.get('https://imovies-backend-9iio.onrender.com/api/shows')
+    axios.get('https://imovies-backend-cthn.onrender.com/api/shows')
       .then((res) => {
         if (res.data && res.data.shows) {
           // Remove duplicates by title for the home grid view
@@ -30,7 +30,7 @@ export default function Home({ onSelectMovie, onLoginSuccess }) {
     e.preventDefault();
     try {
       if (isRegisterMode) {
-        const res = await axios.post('https://imovies-backend-9iio.onrender.com/api/auth/register', { name, email, password });
+        const res = await axios.post('https://imovies-backend-cthn.onrender.com/api/auth/register', { name, email, password });
         if (res.data.success) {
           alert('Registration successful! You are now logged in.');
           setCurrentUser(res.data.user);
@@ -38,7 +38,7 @@ export default function Home({ onSelectMovie, onLoginSuccess }) {
           setShowAuthModal(false);
         }
       } else {
-        const res = await axios.post('https://imovies-backend-9iio.onrender.com/api/auth/login', { email, password });
+        const res = await axios.post('https://imovies-backend-cthn.onrender.com/api/auth/login', { email, password });
         if (res.data.success) {
           alert('Login successful!');
           setCurrentUser(res.data.user);
