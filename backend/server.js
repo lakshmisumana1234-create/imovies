@@ -15,6 +15,13 @@ const Booking = require('./models/Booking');
 const User = require('./models/User');
 
 const app = express();
+
+app.use(cors({
+  origin: ['https://imovies-gray.vercel.app', 'http://localhost:5173', 'http://localhost:3000'],
+  credentials: true
+}));
+
+app.use(express.json());
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
