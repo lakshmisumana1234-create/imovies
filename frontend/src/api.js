@@ -14,6 +14,6 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-export const socket = io('http://localhost:5000', {
+export const socket = io('https://imovies-backend-9iio.onrender.com', {
   autoConnect: false,
 });
