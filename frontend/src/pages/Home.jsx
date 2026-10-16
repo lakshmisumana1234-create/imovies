@@ -126,7 +126,7 @@ export default function Home({ onSelectMovie, onLoginSuccess }) {
         </div>
       </div>
 
-      {/* TAB CONTENT */}
+      {/* TAB CONTENT - MOVIES */}
       {activeTab === 'Movies' && (
         <>
           <div style={{ maxWidth: '1200px', margin: '30px auto', borderRadius: '12px', overflow: 'hidden', height: '280px', background: 'linear-gradient(90deg, #1e1b4b 0%, #311042 100%)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 50px', border: '1px solid #374151' }}>
@@ -134,7 +134,6 @@ export default function Home({ onSelectMovie, onLoginSuccess }) {
               <span style={{ backgroundColor: '#ef4444', color: '#fff', padding: '4px 10px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold' }}>PREMIERE</span>
               <h2 style={{ fontSize: '32px', margin: '10px 0', fontWeight: '800' }}>Avatar: The Way of Water</h2>
               <p style={{ color: '#9ca3af', fontSize: '14px', marginBottom: '20px' }}>English &bull; 3D / IMAX</p>
-              <button style={{ backgroundColor: '#ef4444', color: '#fff', border: 'none', padding: '10px 24px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer' }}>Explore Showtimes</button>
             </div>
             <img src="https://image.tmdb.org/t/p/w500/t6HIqrRAclMCA60NsSmeqe9RmNV.jpg" alt="Banner" style={{ height: '220px', borderRadius: '8px', objectFit: 'cover' }} />
           </div>
@@ -161,6 +160,7 @@ export default function Home({ onSelectMovie, onLoginSuccess }) {
         </>
       )}
 
+      {/* TAB CONTENT - PLAYS */}
       {activeTab === 'Plays' && (
         <div style={{ maxWidth: '1200px', margin: '40px auto', padding: '0 20px' }}>
           <h2 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '20px' }}>Plays & Theatre in Bengaluru</h2>
@@ -173,8 +173,9 @@ export default function Home({ onSelectMovie, onLoginSuccess }) {
               >
                 <img src={play.posterUrl} alt={play.title} style={{ width: '100%', height: '300px', objectFit: 'cover' }} />
                 <div style={{ padding: '12px' }}>
+                  <div style={{ fontSize: '12px', color: '#10b981', marginBottom: '4px' }}>📍 {play.theaterName}</div>
                   <h4 style={{ fontSize: '16px', fontWeight: 'bold', margin: '0 0 4px 0' }}>{play.title}</h4>
-                  <p style={{ color: '#9ca3af', fontSize: '12px', margin: 0 }}>{play.language} &bull; {play.format}</p>
+                  <p style={{ color: '#9ca3af', fontSize: '12px', margin: 0 }}>{play.language} &bull; ₹{play.ticketPrice}</p>
                 </div>
               </div>
             ))}
@@ -182,9 +183,10 @@ export default function Home({ onSelectMovie, onLoginSuccess }) {
         </div>
       )}
 
+      {/* TAB CONTENT - SPORTS */}
       {activeTab === 'Sports' && (
         <div style={{ maxWidth: '1200px', margin: '40px auto', padding: '0 20px' }}>
-          <h2 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '20px' }}>Sports & Marathons in Bengaluru</h2>
+          <h2 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '20px' }}>Sports & Matches in Bengaluru</h2>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(210px, 1fr))', gap: '20px' }}>
             {sports.map((sport) => (
               <div 
@@ -194,8 +196,9 @@ export default function Home({ onSelectMovie, onLoginSuccess }) {
               >
                 <img src={sport.posterUrl} alt={sport.title} style={{ width: '100%', height: '300px', objectFit: 'cover' }} />
                 <div style={{ padding: '12px' }}>
+                  <div style={{ fontSize: '12px', color: '#10b981', marginBottom: '4px' }}>📍 {sport.theaterName}</div>
                   <h4 style={{ fontSize: '16px', fontWeight: 'bold', margin: '0 0 4px 0' }}>{sport.title}</h4>
-                  <p style={{ color: '#9ca3af', fontSize: '12px', margin: 0 }}>{sport.language} &bull; {sport.format}</p>
+                  <p style={{ color: '#9ca3af', fontSize: '12px', margin: 0 }}>{sport.language} &bull; ₹{sport.ticketPrice}</p>
                 </div>
               </div>
             ))}

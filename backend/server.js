@@ -53,10 +53,11 @@ const showSchema = new mongoose.Schema({
 const itemSchema = new mongoose.Schema({
   title: { type: String, required: true },
   posterUrl: { type: String, required: true },
-  format: String,
-  language: String,
-  ticketPrice: Number,
-  time: String
+  theaterName: { type: String, required: true },
+  format: { type: String, required: true },
+  language: { type: String, required: true },
+  ticketPrice: { type: Number, required: true },
+  time: { type: String, required: true }
 }, { timestamps: true });
 
 const Show = mongoose.model('Show', showSchema);
@@ -197,7 +198,7 @@ app.post('/api/payment/verify-payment', async (req, res) => {
   }
 });
 
-// ================= SHOWS ROUTES ================= //
+// ================= SHOWS ROUTES & SEED ================= //
 app.get('/api/shows', async (req, res) => {
   try {
     const shows = await Show.find().sort({ createdAt: -1 });
@@ -212,11 +213,8 @@ app.get('/api/seed-shows', async (req, res) => {
     await Show.deleteMany({});
     await Show.insertMany([
       { title: "The Dark Knight", posterUrl: "https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg", theaterName: "PVR: Orion Mall, Rajajinagar", format: "2D", language: "English", ticketPrice: 350, time: "7:00 PM" },
-      { title: "The Dark Knight", posterUrl: "https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg", theaterName: "INOX: Garuda Mall, Magrath Road", format: "IMAX 2D", language: "English", ticketPrice: 450, time: "9:30 PM" },
-      { title: "Inception", posterUrl: "https://image.tmdb.org/t/p/w500/edv5CZvWj09upOsy2Y6IwDhK8bt.jpg", theaterName: "Cinepolis: Forum Shantiniketan, Whitefield", format: "4DX", language: "English", ticketPrice: 450, time: "9:30 PM" },
-      { title: "Inception", posterUrl: "https://image.tmdb.org/t/p/w500/edv5CZvWj09upOsy2Y6IwDhK8bt.jpg", theaterName: "PVR: Forum Nexus, Koramangala", format: "2D", language: "English", ticketPrice: 350, time: "4:30 PM" },
-      { title: "Avatar: The Way of Water", posterUrl: "https://image.tmdb.org/t/p/w500/t6HIqrRAclMCA60NsSmeqe9RmNV.jpg", theaterName: "PVR Director's Cut: UB City", format: "3D", language: "English", ticketPrice: 600, time: "6:15 PM" },
-      { title: "Avatar: The Way of Water", posterUrl: "https://image.tmdb.org/t/p/w500/t6HIqrRAclMCA60NsSmeqe9RmNV.jpg", theaterName: "PVR: Orion Mall, Rajajinagar", format: "3D", language: "English", ticketPrice: 500, time: "1:00 PM" }
+      { title: "Inception", posterUrl: "https://image.tmdb.org/t/p/w500/edv5CZvWj09upOsy2Y6IwDhK8bt.jpg", theaterName: "Cinepolis: Forum Shantiniketan, Whitefield", format: "2D", language: "English", ticketPrice: 450, time: "9:30 PM" },
+      { title: "Avatar: The Way of Water", posterUrl: "https://image.tmdb.org/t/p/w500/t6HIqrRAclMCA60NsSmeqe9RmNV.jpg", theaterName: "PVR Director's Cut: UB City", format: "3D", language: "English", ticketPrice: 600, time: "6:15 PM" }
     ]);
     res.status(200).json({ success: true, message: "Shows seeded successfully!" });
   } catch (error) {
@@ -224,7 +222,7 @@ app.get('/api/seed-shows', async (req, res) => {
   }
 });
 
-// ================= PLAYS ROUTES ================= //
+// ================= PLAYS ROUTES & SEED ================= //
 app.get('/api/plays', async (req, res) => {
   try {
     const plays = await Play.find().sort({ createdAt: -1 });
@@ -238,7 +236,8 @@ app.get('/api/seed-plays', async (req, res) => {
   try {
     await Play.deleteMany({});
     await Play.insertMany([
-      { title: "Karnabharam (Sanskrit Play)", posterUrl: "https://image.tmdb.org/t/p/w500/edv5CZvWj09upOsy2Y6IwDhK8bt.jpg", format: "Live Stage", language: "Sanskrit/English", ticketPrice: 300, time: "6:00 PM" }
+      { title: "Karnabharam (Sanskrit Play)", posterUrl: "https://image.tmdb.org/t/p/w500/edv5CZvWj09upOsy2Y6IwDhK8bt.jpg", theaterName: "Ranga Shankara, Jayanagar", format: "2D", language: "Sanskrit/English", ticketPrice: 300, time: "6:00 PM" },
+      { title: "Tughlaq by Girish Karnad", posterUrl: "https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg", theaterName: "Chowdiah Memorial Hall, Malleshwaram", format: "2D", language: "Kannada", ticketPrice: 350, time: "7:30 PM" }
     ]);
     res.status(200).json({ success: true, message: "Plays seeded successfully!" });
   } catch (error) {
@@ -246,7 +245,7 @@ app.get('/api/seed-plays', async (req, res) => {
   }
 });
 
-// ================= SPORTS ROUTES ================= //
+// ================= SPORTS ROUTES & SEED ================= //
 app.get('/api/sports', async (req, res) => {
   try {
     const sports = await Sport.find().sort({ createdAt: -1 });
@@ -260,7 +259,8 @@ app.get('/api/seed-sports', async (req, res) => {
   try {
     await Sport.deleteMany({});
     await Sport.insertMany([
-      { title: "Bengaluru FC vs Mumbai City FC", posterUrl: "https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg", format: "Football", language: "English", ticketPrice: 400, time: "8:00 PM" }
+      { title: "Bengaluru FC vs Mumbai City FC", posterUrl: "https://image.tmdb.org/t/p/w500/t6HIqrRAclMCA60NsSmeqe9RmNV.jpg", theaterName: "Kanteerava Stadium, Bengaluru", format: "2D", language: "English", ticketPrice: 400, time: "8:00 PM" },
+      { title: "RCB vs CSK T20 Match", posterUrl: "https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg", theaterName: "M. Chinnaswamy Stadium, MG Road", format: "2D", language: "English / Kannada", ticketPrice: 1500, time: "7:30 PM" }
     ]);
     res.status(200).json({ success: true, message: "Sports seeded successfully!" });
   } catch (error) {
