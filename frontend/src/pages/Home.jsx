@@ -3,6 +3,8 @@ import axios from 'axios';
 
 export default function Home({ onSelectMovie, onLoginSuccess }) {
   const [shows, setShows] = useState([]);
+  const [plays, setPlays] = useState([]);
+  const [sports, setSports] = useState([]);
   const [search, setSearch] = useState('');
   const [activeTab, setActiveTab] = useState('Movies');
 
@@ -13,17 +15,39 @@ export default function Home({ onSelectMovie, onLoginSuccess }) {
   const [name, setName] = useState('');
   const [currentUser, setCurrentUser] = useState(null);
 
+  // Fetch Movies
   useEffect(() => {
     axios.get('https://imovies-backend-91io.onrender.com/api/shows')
       .then((res) => {
         if (res.data && res.data.shows) {
-          // Remove duplicates by title for the home grid view
           const uniqueMovies = Array.from(new Set(res.data.shows.map(s => s.title)))
             .map(title => res.data.shows.find(s => s.title === title));
           setShows(uniqueMovies);
         }
       })
       .catch((err) => console.error("Error fetching shows:", err));
+  }, []);
+
+  // Fetch Plays
+  useEffect(() => {
+    axios.get('https://imovies-backend-91io.onrender.com/api/plays')
+      .then((res) => {
+        if (res.data && res.data.plays) {
+          setPlays(res.data.plays);
+        }
+      })
+      .catch((err) => console.error("Error fetching plays:", err));
+  }, []);
+
+  // Fetch Sports
+  useEffect(() => {
+    axios.get('https://imovies-backend-91io.onrender.com/api/sports')
+      .then((res) => {
+        if (res.data && res.data.sports) {
+          setSports(res.data.sports);
+        }
+      })
+      .catch((err) => console.error("Error fetching sports:", err));
   }, []);
 
   const handleAuthSubmit = async (e) => {
@@ -137,46 +161,45 @@ export default function Home({ onSelectMovie, onLoginSuccess }) {
         </>
       )}
 
-      {activeTab === 'Stream' && (
-        <div style={{ maxWidth: '1200px', margin: '50px auto', padding: '0 20px', textAlign: 'center' }}>
-          <h2 style={{ fontSize: '28px', color: '#ef4444', marginBottom: '10px' }}>iMovies Stream</h2>
-          <p style={{ color: '#9ca3af', marginBottom: '30px' }}>New cinematic releases streaming every Friday.</p>
-        </div>
-      )}
-
-      {activeTab === 'Events' && (
-        <div style={{ maxWidth: '1200px', margin: '40px auto', padding: '0 20px' }}>
-          <h2 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '20px' }}>Live Events & Concerts in Bengaluru</h2>
-        </div>
-      )}
-
       {activeTab === 'Plays' && (
         <div style={{ maxWidth: '1200px', margin: '40px auto', padding: '0 20px' }}>
           <h2 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '20px' }}>Plays & Theatre in Bengaluru</h2>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(210px, 1fr))', gap: '20px' }}>
+            {plays.map((play) => (
+              <div 
+                key={play._id} 
+                onClick={() => onSelectMovie(play)}
+                style={{ backgroundColor: '#111827', borderRadius: '10px', overflow: 'hidden', border: '1px solid #1f2937', cursor: 'pointer' }}
+              >
+                <img src={play.posterUrl} alt={play.title} style={{ width: '100%', height: '300px', objectFit: 'cover' }} />
+                <div style={{ padding: '12px' }}>
+                  <h4 style={{ fontSize: '16px', fontWeight: 'bold', margin: '0 0 4px 0' }}>{play.title}</h4>
+                  <p style={{ color: '#9ca3af', fontSize: '12px', margin: 0 }}>{play.language} &bull; {play.format}</p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       )}
 
       {activeTab === 'Sports' && (
         <div style={{ maxWidth: '1200px', margin: '40px auto', padding: '0 20px' }}>
           <h2 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '20px' }}>Sports & Marathons in Bengaluru</h2>
-        </div>
-      )}
-
-      {activeTab === 'Activities' && (
-        <div style={{ maxWidth: '1200px', margin: '40px auto', padding: '0 20px' }}>
-          <h2 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '20px' }}>Fun Activities & Amusement Parks</h2>
-        </div>
-      )}
-
-      {activeTab === 'ListYourShow' && (
-        <div style={{ maxWidth: '700px', margin: '40px auto', backgroundColor: '#111827', padding: '40px', borderRadius: '12px', border: '1px solid #1f2937' }}>
-          <h2 style={{ fontSize: '26px', fontWeight: 'bold', marginBottom: '10px' }}>List your Show or Event</h2>
-          <p style={{ color: '#9ca3af', fontSize: '14px', marginBottom: '25px' }}>Partner with iMovies to publish ticketing and manage gate entries.</p>
-          <form onSubmit={(e) => { e.preventDefault(); alert("Request submitted successfully!"); }} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-            <input type="text" required placeholder="Full Name" style={{ padding: '10px', borderRadius: '6px', backgroundColor: '#1f2937', border: '1px solid #374151', color: '#fff' }} />
-            <input type="email" required placeholder="Company Email" style={{ padding: '10px', borderRadius: '6px', backgroundColor: '#1f2937', border: '1px solid #374151', color: '#fff' }} />
-            <button type="submit" style={{ backgroundColor: '#ef4444', color: '#fff', border: 'none', padding: '12px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer' }}>Receive a callback</button>
-          </form>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(210px, 1fr))', gap: '20px' }}>
+            {sports.map((sport) => (
+              <div 
+                key={sport._id} 
+                onClick={() => onSelectMovie(sport)}
+                style={{ backgroundColor: '#111827', borderRadius: '10px', overflow: 'hidden', border: '1px solid #1f2937', cursor: 'pointer' }}
+              >
+                <img src={sport.posterUrl} alt={sport.title} style={{ width: '100%', height: '300px', objectFit: 'cover' }} />
+                <div style={{ padding: '12px' }}>
+                  <h4 style={{ fontSize: '16px', fontWeight: 'bold', margin: '0 0 4px 0' }}>{sport.title}</h4>
+                  <p style={{ color: '#9ca3af', fontSize: '12px', margin: 0 }}>{sport.language} &bull; {sport.format}</p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       )}
 
