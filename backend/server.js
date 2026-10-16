@@ -22,6 +22,8 @@ app.use(cors({
 }));
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
@@ -30,10 +32,6 @@ const io = new Server(server, {
   },
 });
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(cors());
-
 mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/iMovies', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -41,6 +39,7 @@ mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/iMovies', {
 .then(() => console.log("Connected to MongoDB successfully"))
 .catch((err) => console.error("MongoDB connection error:", err));
 
+// ================= SCHEMAS & MODELS ================= //
 const showSchema = new mongoose.Schema({
   title: { type: String, required: true },
   posterUrl: { type: String, required: true },
@@ -51,7 +50,18 @@ const showSchema = new mongoose.Schema({
   time: { type: String, required: true },
 }, { timestamps: true });
 
+const itemSchema = new mongoose.Schema({
+  title: { type: String, required: true },
+  posterUrl: { type: String, required: true },
+  format: String,
+  language: String,
+  ticketPrice: Number,
+  time: String
+}, { timestamps: true });
+
 const Show = mongoose.model('Show', showSchema);
+const Play = mongoose.model('Play', itemSchema, 'plays');
+const Sport = mongoose.model('Sport', itemSchema, 'sports');
 
 const razorpay = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,
@@ -136,7 +146,7 @@ app.post('/api/auth/login', async (req, res) => {
   }
 });
 
-// ================= PAYMENT & BOOKING ROUTES (WITH DEBUG LOGS) ================= //
+// ================= PAYMENT & BOOKING ROUTES ================= //
 app.post('/api/payment/create-order', async (req, res) => {
   try {
     const { amount } = req.body;
@@ -151,17 +161,10 @@ app.post('/api/payment/verify-payment', async (req, res) => {
   try {
     const { razorpay_order_id, razorpay_payment_id, razorpay_signature, userId, showId, seats, totalPrice, userEmail, userPhone, movieTitle } = req.body;
     
-    console.log("Secret Key loaded:", process.env.RAZORPAY_KEY_SECRET ? "Yes (Length: " + process.env.RAZORPAY_KEY_SECRET.length + ")" : "MISSING!");
-    console.log("Order ID:", razorpay_order_id);
-    console.log("Payment ID:", razorpay_payment_id);
-
     const expectedSignature = crypto
       .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
       .update(razorpay_order_id + "|" + razorpay_payment_id)
       .digest("hex");
-
-    console.log("Expected Signature:", expectedSignature);
-    console.log("Received Signature:", razorpay_signature);
 
     if (expectedSignature === razorpay_signature) {
       await Booking.create({ user: userId, show: showId, seats, totalPrice });
@@ -187,16 +190,14 @@ app.post('/api/payment/verify-payment', async (req, res) => {
 
       return res.status(200).json({ success: true, message: "Payment verified successfully" });
     } else {
-      console.error("Signature mismatch!");
       return res.status(400).json({ success: false, message: "Invalid signature" });
     }
   } catch (error) {
-    console.error("Verification server error:", error);
     res.status(500).json({ success: false, error: error.message });
   }
 });
 
-// ================= SHOWS & SEED ROUTES ================= //
+// ================= SHOWS ROUTES ================= //
 app.get('/api/shows', async (req, res) => {
   try {
     const shows = await Show.find().sort({ createdAt: -1 });
@@ -218,6 +219,50 @@ app.get('/api/seed-shows', async (req, res) => {
       { title: "Avatar: The Way of Water", posterUrl: "https://image.tmdb.org/t/p/w500/t6HIqrRAclMCA60NsSmeqe9RmNV.jpg", theaterName: "PVR: Orion Mall, Rajajinagar", format: "3D", language: "English", ticketPrice: 500, time: "1:00 PM" }
     ]);
     res.status(200).json({ success: true, message: "Shows seeded successfully!" });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// ================= PLAYS ROUTES ================= //
+app.get('/api/plays', async (req, res) => {
+  try {
+    const plays = await Play.find().sort({ createdAt: -1 });
+    res.status(200).json({ success: true, plays });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+app.get('/api/seed-plays', async (req, res) => {
+  try {
+    await Play.deleteMany({});
+    await Play.insertMany([
+      { title: "Karnabharam (Sanskrit Play)", posterUrl: "https://image.tmdb.org/t/p/w500/edv5CZvWj09upOsy2Y6IwDhK8bt.jpg", format: "Live Stage", language: "Sanskrit/English", ticketPrice: 300, time: "6:00 PM" }
+    ]);
+    res.status(200).json({ success: true, message: "Plays seeded successfully!" });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// ================= SPORTS ROUTES ================= //
+app.get('/api/sports', async (req, res) => {
+  try {
+    const sports = await Sport.find().sort({ createdAt: -1 });
+    res.status(200).json({ success: true, sports });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+app.get('/api/seed-sports', async (req, res) => {
+  try {
+    await Sport.deleteMany({});
+    await Sport.insertMany([
+      { title: "Bengaluru FC vs Mumbai City FC", posterUrl: "https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg", format: "Football", language: "English", ticketPrice: 400, time: "8:00 PM" }
+    ]);
+    res.status(200).json({ success: true, message: "Sports seeded successfully!" });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
