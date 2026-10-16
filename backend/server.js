@@ -9,7 +9,6 @@ app.use(express.json());
 app.use(cors());
 
 // MongoDB Atlas Connection String
-// (Replace with your actual Atlas URI or environment variable process.env.MONGO_URI)
 const MONGO_URI = process.env.MONGO_URI || 'YOUR_MONGODB_ATLAS_CONNECTION_STRING';
 
 mongoose.connect(MONGO_URI, {
@@ -37,6 +36,27 @@ const itemSchema = new mongoose.Schema({
 const Play = mongoose.model('Play', itemSchema);
 const Sport = mongoose.model('Sport', itemSchema);
 const Movie = mongoose.model('Movie', itemSchema);
+
+// ==========================================
+// API Routes: Unified Shows (Resolves 404)
+// ==========================================
+app.get('/api/shows', async (req, res) => {
+  try {
+    const movies = await Movie.find({});
+    const plays = await Play.find({});
+    const sports = await Sport.find({});
+
+    const allShows = [
+      ...movies.map(m => ({ ...m.toObject(), category: 'movie' })),
+      ...plays.map(p => ({ ...p.toObject(), category: 'play' })),
+      ...sports.map(s => ({ ...s.toObject(), category: 'sport' }))
+    ];
+
+    res.status(200).json({ success: true, shows: allShows });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
 
 // ==========================================
 // API Routes: Plays
