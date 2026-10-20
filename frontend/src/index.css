@@ -1,0 +1,46 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+
+:root {
+  --bms-bg: #1f2533;
+  --bms-card: #2b3148;
+  --bms-red: #f84464;
+  --bms-red-hover: #d63353;
+  --seat-available: #ffffff;
+  --seat-selected: #1ea83c;
+  --seat-locked: #e50914;
+  --seat-booked: #eee;
+  --seat-border: #1ea83c;
+}
+
+body {
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
+  background-color: var(--bms-bg);
+  color: #ffffff;
+}
+
+/* Curved Screen with Downward Projection Glow */
+.bms-screen-container {
+  perspective: 400px;
+  margin: 30px auto 40px auto;
+  text-align: center;
+}
+
+.bms-screen {
+  width: 70%;
+  height: 16px;
+  margin: 0 auto;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0));
+  border-top: 4px solid #ffffff;
+  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+  box-shadow: 0 15px 30px rgba(255, 255, 255, 0.25);
+  transform: rotateX(-10deg);
+}
+
+.bms-screen-text {
+  color: #999;
+  font-size: 0.75rem;
+  letter-spacing: 4px;
+  margin-top: 12px;
+  text-transform: uppercase;
+}
